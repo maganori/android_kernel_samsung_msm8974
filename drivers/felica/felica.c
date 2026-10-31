@@ -1665,6 +1665,16 @@ static ssize_t felica_cen_read(struct file *file, char __user *buf, \
 	read_buff &= FELICA_CONTROL_LOCK_MASK;
 
 #ifdef CONFIG_NFC_FELICA
+	/* TEMP EXPERIMENT (hltedcm port): once the cen write path
+	 * has set the unlocked state, keep reporting it. On this
+	 * unit the SE lock register read-back does not reflect a
+	 * successful unlock command (write returns success, the
+	 * next read still reports locked), which makes the Sony
+	 * middleware skip LIBTOP_startNfcLib forever. Revert
+	 * before release. */
+	if (g_cen_sts != 0) {
+		read_buff = g_cen_sts;
+	}
 	g_cen_sts = read_buff;
 #endif
 
@@ -5231,6 +5241,16 @@ static ssize_t snfc_cen_sts_init(void)
 	FELICA_PR_INFO(" %s read_buff=[%d]", __func__, read_buff);
 	read_buff &= FELICA_CONTROL_LOCK_MASK;
 	FELICA_PR_INFO(" %s read_buff=[%d]", __func__, read_buff);
+	/* TEMP EXPERIMENT (hltedcm port): once the cen write path
+	 * has set the unlocked state, keep reporting it. On this
+	 * unit the SE lock register read-back does not reflect a
+	 * successful unlock command (write returns success, the
+	 * next read still reports locked), which makes the Sony
+	 * middleware skip LIBTOP_startNfcLib forever. Revert
+	 * before release. */
+	if (g_cen_sts != 0) {
+		read_buff = g_cen_sts;
+	}
 	g_cen_sts = read_buff;
 
 	#if defined(CONFIG_MACH_HLTEDCM)
@@ -5448,6 +5468,16 @@ static ssize_t snfc_cen_read(struct file *file, char __user *buf, \
 	read_buff &= SNFC_CONTROL_LOCK_MASK;
 
 #ifdef CONFIG_NFC_FELICA
+	/* TEMP EXPERIMENT (hltedcm port): once the cen write path
+	 * has set the unlocked state, keep reporting it. On this
+	 * unit the SE lock register read-back does not reflect a
+	 * successful unlock command (write returns success, the
+	 * next read still reports locked), which makes the Sony
+	 * middleware skip LIBTOP_startNfcLib forever. Revert
+	 * before release. */
+	if (g_cen_sts != 0) {
+		read_buff = g_cen_sts;
+	}
 	g_cen_sts = read_buff;
 #endif
 
