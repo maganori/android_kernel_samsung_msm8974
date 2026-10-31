@@ -1368,6 +1368,8 @@ static struct i2c_client *felica_i2c_client;
 static const struct i2c_device_id felica_i2c_idtable[] = 
 {
 	{FELICA_I2C_NAME, 0},
+	/* the Japanese-model DTS nodes name the device "felica_irq" */
+	{"felica_irq", 0},
 	{}
 };
 
@@ -1377,6 +1379,8 @@ MODULE_DEVICE_TABLE(i2c, felica_i2c_idtable);
 static struct of_device_id felica_i2c_match_table[] = 
 {
 	{ .compatible = "felica,felica-i2c",},
+	/* msm8974-sec-hltejpn-*.dtsi ship the node with this compatible */
+	{ .compatible = "felica,felica_irq",},
 	{},
 };
 #endif
